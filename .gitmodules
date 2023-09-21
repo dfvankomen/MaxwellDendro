@@ -1,0 +1,4 @@
+[submodule "dendrolib"]
+	path = dendrolib
+	url = https://github.com/dfvankomen/Dendro-5.01.git
+	branch = ghost_compression
