@@ -231,11 +231,6 @@ add_subdirectory(dendrolib)
 add_subdirectory(libs)
 
 # additional subdirectories that are their own "solvers"
-add_subdirectory(BSSN_GR)
-# add_subdirectory(CCZ4_GR)
-add_subdirectory(NLSigma)
-add_subdirectory(Fluid)
-add_subdirectory(EM1)
-add_subdirectory(EM2)
+
 add_subdirectory(EM3)
-add_subdirectory(EM4)
+

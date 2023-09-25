@@ -30,6 +30,8 @@ namespace em3
 
     double EM3_RK45_DESIRED_TOL=1e-6;
 
+    unsigned int EM3_RK_TYPE = 1;
+
 
     unsigned int EM3_CHECKPT_FREQ=10;
     unsigned int EM3_RESTORE_SOLVER=0;

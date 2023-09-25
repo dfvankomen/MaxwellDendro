@@ -3,6 +3,49 @@ using namespace std;
 using namespace em3;
 using namespace dendro_cfd;
 
+void em3DoRHS(double **uzipVarsRHS, const double **uZipVars,
+                     const ot::Block *blkList, unsigned int numBlocks) {
+    unsigned int offset;
+    double ptmin[3], ptmax[3];
+    unsigned int sz[3];
+    unsigned int bflag;
+    double dx, dy, dz;
+
+    // std::cout << "Now in RHS" << std::endl;
+
+    const Point pt_min(em3::EM3_COMPD_MIN[0], em3::EM3_COMPD_MIN[1],
+                       em3::EM3_COMPD_MIN[2]);
+    const Point pt_max(em3::EM3_COMPD_MAX[0], em3::EM3_COMPD_MAX[1],
+                       em3::EM3_COMPD_MAX[2]);
+    const unsigned int PW = em3::EM3_PADDING_WIDTH;
+
+    for (unsigned int blk = 0; blk < numBlocks; blk++) {
+        offset = blkList[blk].getOffset();
+        sz[0] = blkList[blk].getAllocationSzX();
+        sz[1] = blkList[blk].getAllocationSzY();
+        sz[2] = blkList[blk].getAllocationSzZ();
+
+        bflag = blkList[blk].getBlkNodeFlag();
+
+        dx = blkList[blk].computeDx(pt_min, pt_max);
+        dy = blkList[blk].computeDy(pt_min, pt_max);
+        dz = blkList[blk].computeDz(pt_min, pt_max);
+
+        ptmin[0] = GRIDX_TO_X(blkList[blk].getBlockNode().minX()) - PW * dx;
+        ptmin[1] = GRIDY_TO_Y(blkList[blk].getBlockNode().minY()) - PW * dy;
+        ptmin[2] = GRIDZ_TO_Z(blkList[blk].getBlockNode().minZ()) - PW * dz;
+
+        ptmax[0] = GRIDX_TO_X(blkList[blk].getBlockNode().maxX()) + PW * dx;
+        ptmax[1] = GRIDY_TO_Y(blkList[blk].getBlockNode().maxY()) + PW * dy;
+        ptmax[2] = GRIDZ_TO_Z(blkList[blk].getBlockNode().maxZ()) + PW * dz;
+
+        // em3rhs(uzipVarsRHS, uZipVars, offset, ptmin, ptmax, sz, bflag);
+
+        em3rhs_CFD(uzipVarsRHS, (double **)uZipVars, offset, ptmin, ptmax, sz,
+                   bflag);
+    }
+}
+
 /*----------------------------------------------------------------------;
  *
  * RHS for NOT the EM3

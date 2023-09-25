@@ -84,6 +84,32 @@ endif()
 target_link_libraries(em3Solver dendro5 ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} m)
 target_link_libraries(em3Solver xsmm)
 
+
+# =========== CTX VERSION OF SOLVEr
+
+set(SOURCE_FILES include/em3Ctx.h src/em3Ctx.cpp src/em3_main.cpp  include/em3.h ${EM3_INC} ${EM3_SRC})
+add_executable(em3SolverNEW ${SOURCE_FILES})
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/include/test)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/examples/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/FEM/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/ODE/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/LinAlg/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/IO/vtk/include)
+target_include_directories(em3SolverNEW PRIVATE ${CMAKE_SOURCE_DIR}/dendrolib/IO/zlib/inc)
+target_include_directories(em3SolverNEW PRIVATE ${MPI_INCLUDE_PATH})
+target_include_directories(em3SolverNEW PRIVATE ${GSL_INCLUDE_DIRS})
+if(WITH_CUDA)
+    target_include_directories(em3SolverNEW PRIVATE ${CUDA_INCLUDE_DIRS})
+endif()
+target_link_libraries(em3SolverNEW dendro5 ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} m)
+target_link_libraries(em3SolverNEW xsmm)
+
+# END CTX VERSION OF SOLVER
+
+
+
 set(DERIV_TEST_SRC src/compact_derivs.cpp
         src/derivs.cpp
         src/kim.cpp

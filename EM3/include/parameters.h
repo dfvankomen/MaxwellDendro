@@ -66,6 +66,8 @@ namespace em3
     /**@brief number of rk4 stages*/
     static const unsigned int EM3_RK3_STAGES=3;
 
+    static const unsigned int EM3_INIT_GRID_ITER = 10;
+
     /**@brief: parameter used for adaptive time step update. */
     static const double EM3_SAFETY_FAC=0.8;
 

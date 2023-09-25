@@ -9,12 +9,16 @@
 #include "profile_params.h"
 #include "mathUtils.h"
 #include "compact_derivs.h"
+#include "em3.h"
 
 #ifdef EM3_ENABLE_CUDA
 #include "rhs_cuda.cuh"
     #include "params_cu.h"
     #include "profile_gpu.h"
 #endif
+
+void em3DoRHS(double **uzipVarsRHS, const double **uZipVars,
+                     const ot::Block *blkList, unsigned int numBlocks);
 
 /**@brief computes complete RHS iteratiing over all the blocks.
  * @param[out] unzipVarsRHS: unzipped variables computed RHS

@@ -23,7 +23,20 @@
 
 namespace em3
 {
-    class EM3Ctx : public ts::Ctx<EM3Ctx,DendroScalar, DendroIntL>
+
+    enum VL {
+        CPU_EV=0, // evolution variable
+        CPU_CV, // constraint variable
+        CPU_EV_UZ_IN, // evolution variable unzip in
+        CPU_EV_UZ_OUT, // evolution variable unzip out
+        CPU_CV_UZ_IN, // constraint variable unzip in
+        CPU_PV, // primitive variable for the analytical solution
+        END
+        };
+    
+    typedef ot::DVector<DendroScalar, unsigned int> DVec;
+
+    class EM3Ctx : public ts::Ctx<EM3Ctx,DendroScalar, unsigned int>
     {
 
         
@@ -47,6 +60,8 @@ namespace em3
 
             /**@brief: constraint var unzip 0 unzip in 1 unzip out*/
             DVec m_uiCUnzip[2];
+
+            DVec m_var[VL::END];
             
             
 
@@ -60,6 +75,8 @@ namespace em3
 
             /**@brief: initial solution*/
             int initialize();
+
+            int init_grid();
             
             /**
              * @brief computes the BSSN rhs 
@@ -100,18 +117,18 @@ namespace em3
             /**@brief: function execute before each stage
              * @param sIn: stage var in. 
             */
-            int pre_stage(DVec sIn); 
+            inline int pre_stage(DVec& sIn) {return 0;}; 
 
             /**@brief: function execute after each stage
              * @param sIn: stage var in. 
             */
-            int post_stage(DVec sIn);
+            int post_stage(DVec& sIn);
 
             /**@brief: function execute before each step*/
-            int pre_timestep(DVec sIn); 
+            inline int pre_timestep(DVec& sIn) {return 0;}; 
 
             /**@brief: function execute after each step*/
-            int post_timestep(DVec sIn);
+            int post_timestep(DVec& sIn);
 
             /**@brief: function execute after each step*/
             bool is_remesh();
@@ -129,16 +146,13 @@ namespace em3
             int finalize();
 
             /**@brief: pack and returns the evolution variables to one DVector*/
-            DVec get_evolution_vars();
+            DVec& get_evolution_vars();
 
             /**@brief: pack and returns the constraint variables to one DVector*/
-            DVec get_constraint_vars();
+            DVec& get_constraint_vars();
 
             /**@brief: pack and returns the primitive variables to one DVector*/
-            DVec get_primitive_vars();
-
-            /**@brief: updates the application variables from the variable list. */
-            int update_app_vars();
+            DVec& get_primitive_vars();
 
             /**@brief: prints any messages to the terminal output. */
             int terminal_output();
@@ -169,6 +183,7 @@ namespace em3
 
             static unsigned int getBlkTimestepFac(unsigned int blev, unsigned int lmin, unsigned int lmax);
             
+            int grid_transfer(const ot::Mesh* m_new);
 
 
     };

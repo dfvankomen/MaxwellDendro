@@ -74,6 +74,10 @@ void readParamFile(const char* fName, MPI_Comm comm) {
             em3::DISSIPATION_TYPE = parFile["DISSIPATION_TYPE"];
         };
 
+        if (parFile.find("EM3_RK_TYPE") != parFile.end()) {
+            em3::EM3_RK_TYPE = parFile["EM3_RK_TYPE"];
+        }
+
         temp_EM3_DERIV_TYPE = parFile["EM3_DERIV_TYPE"];
         temp_EM3_FILTER_TYPE = parFile["EM3_FILTER_TYPE"];
 
@@ -163,6 +167,8 @@ void readParamFile(const char* fName, MPI_Comm comm) {
     par::Mpi_Bcast(&EM3_CHI_REFINE_VAL, 1, 0, comm);
     par::Mpi_Bcast(&EM3_CHI_COARSEN_VAL, 1, 0, comm);
     par::Mpi_Bcast((unsigned int*)&EM3_REFINEMENT_MODE, 1, 0, comm);
+
+    par::Mpi_Bcast(&EM3_RK_TYPE, 1, 0, comm);
 
     par::Mpi_Bcast(&EM3_VTU_Z_SLICE_ONLY, 1, 0, comm);
 
