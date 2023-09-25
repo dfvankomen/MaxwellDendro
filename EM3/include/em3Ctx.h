@@ -54,10 +54,11 @@ class EM3Ctx : public ts::Ctx<EM3Ctx, DendroScalar, unsigned int> {
     /**@brief: initial solution*/
     int initialize();
 
+    /** @brief initializes the grid for the solution */
     int init_grid();
 
     /**
-     * @brief computes the BSSN rhs
+     * @brief computes the EM3 rhs
      *
      * @param in : zipped input
      * @param out : zipped output

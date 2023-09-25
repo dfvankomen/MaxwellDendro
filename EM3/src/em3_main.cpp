@@ -348,6 +348,7 @@ int main(int argc, char** argv) {
             const bool isActive = ets->is_active();
             const unsigned int rank_global = ets->get_global_rank();
 
+            // TODO: consider if we should not remesh on time step 0
             if ((step % em3::EM3_REMESH_TEST_FREQ) == 0) {
                 bool isRemesh = em3Ctx->is_remesh();
                 if (isRemesh) {

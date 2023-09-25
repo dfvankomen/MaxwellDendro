@@ -322,12 +322,15 @@ int main (int argc, char** argv)
         std::cout<<"\t"<<GRN<<" blk (min,mean,max): "<<"( "<<t_blk_g[0]<<"\t"<<t_blk_g[1]<<"\t"<<t_blk_g[2]<<" )"<<NRM<<std::endl;
     }
 
-    unsigned int lmin,lmax;
-    mesh->computeMinMaxLevel(lmin,lmax);
-    em3::EM3_RK45_TIME_STEP_SIZE=em3::EM3_CFL_FACTOR*((em3::EM3_COMPD_MAX[0]-em3::EM3_COMPD_MIN[0])*((1u<<(m_uiMaxDepth-lmax))/((double) em3::EM3_ELE_ORDER))/((double)(1u<<(m_uiMaxDepth))));
-    par::Mpi_Bcast(&em3::EM3_RK45_TIME_STEP_SIZE,1,0,comm);
-    //std::cout<<" lmin: "<<lmin<<" lmax: "<<lmax<<std::endl;
-    
+    unsigned int lmin, lmax;
+    mesh->computeMinMaxLevel(lmin, lmax);
+    em3::EM3_RK45_TIME_STEP_SIZE =
+        em3::EM3_CFL_FACTOR *
+        ((em3::EM3_COMPD_MAX[0] - em3::EM3_COMPD_MIN[0]) *
+         ((1u << (m_uiMaxDepth - lmax)) / ((double)em3::EM3_ELE_ORDER)) /
+         ((double)(1u << (m_uiMaxDepth))));
+    par::Mpi_Bcast(&em3::EM3_RK45_TIME_STEP_SIZE, 1, 0, comm);
+    std::cout << " lmin: " << lmin << " lmax: " << lmax << " rk45 time calculated as " <<em3::EM3_RK45_TIME_STEP_SIZE << std::endl;
 
     ode::solver::RK4_EM3 rk_em3(mesh,em3::EM3_RK45_TIME_BEGIN,em3::EM3_RK45_TIME_END,em3::EM3_RK45_TIME_STEP_SIZE);
     //ode::solver::RK3_EM3 rk_em3(mesh,em3::EM3_RK45_TIME_BEGIN,em3::EM3_RK45_TIME_END,em3::EM3_RK45_TIME_STEP_SIZE);

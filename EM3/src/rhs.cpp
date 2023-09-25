@@ -39,10 +39,10 @@ void em3DoRHS(double **uzipVarsRHS, const double **uZipVars,
         ptmax[1] = GRIDY_TO_Y(blkList[blk].getBlockNode().maxY()) + PW * dy;
         ptmax[2] = GRIDZ_TO_Z(blkList[blk].getBlockNode().maxZ()) + PW * dz;
 
-        // em3rhs(uzipVarsRHS, uZipVars, offset, ptmin, ptmax, sz, bflag);
+        em3rhs(uzipVarsRHS, uZipVars, offset, ptmin, ptmax, sz, bflag);
 
-        em3rhs_CFD(uzipVarsRHS, (double **)uZipVars, offset, ptmin, ptmax, sz,
-                   bflag);
+        // em3rhs_CFD(uzipVarsRHS, (double **)uZipVars, offset, ptmin, ptmax, sz,
+        //            bflag);
     }
 }
 
