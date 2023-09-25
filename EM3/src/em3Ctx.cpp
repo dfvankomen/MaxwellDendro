@@ -204,6 +204,7 @@ int EM3Ctx::initialize() {
          ((1u << (m_uiMaxDepth - lmax)) / ((double)em3::EM3_ELE_ORDER)) /
          ((double)(1u << (m_uiMaxDepth))));
     m_uiTinfo._m_uiTh = em3::EM3_RK45_TIME_STEP_SIZE;
+    std::cout << " lmin: " << lmin << " lmax: " << lmax << " rk45 time calculated as " <<em3::EM3_RK45_TIME_STEP_SIZE << std::endl;
 
     if (!m_uiMesh->getMPIRankGlobal()) {
         const DendroScalar dx_finest =
@@ -256,7 +257,7 @@ int EM3Ctx::init_grid() {
     DendroScalar* zipIn[em3::EM3_NUM_VARS];
     m_evar.to_2d(zipIn);
 
-    DendroScalar mp, mm, mp_adm, mm_adm, E, J1, J2, J3;
+    // DendroScalar mp, mm, mp_adm, mm_adm, E, J1, J2, J3;
 
     for (unsigned int elem = m_uiMesh->getElementLocalBegin();
          elem < m_uiMesh->getElementLocalEnd(); elem++) {
@@ -459,7 +460,7 @@ int EM3Ctx::write_vtu() {
                               (const double**)pData);
     }
 
-    std::cout << "ending vtu out..." << std::endl;
+    // std::cout << "ending vtu out..." << std::endl;
     return 0;
 }
 
@@ -809,12 +810,12 @@ bool EM3Ctx::is_remesh() {
             (const double**)unzipVar, refineVarIds, EM3_NUM_REFINE_VARS,
             waveletTolFunc, em3::EM3_DENDRO_AMR_FAC);
 
-    if (em3::EM3_REFINEMENT_MODE == em3::RefinementMode::FR)
+    else if (em3::EM3_REFINEMENT_MODE == em3::RefinementMode::FR)
         isRefine = em3::isRemeshForce(m_uiMesh, (const double**)unzipVar,
                                       em3::VAR::U_B0, em3::EM3_CHI_REFINE_VAL,
                                       em3::EM3_CHI_COARSEN_VAL, true);
 
-    if (em3::EM3_REFINEMENT_MODE == em3::RefinementMode::WAMR_FR) {
+    else if (em3::EM3_REFINEMENT_MODE == em3::RefinementMode::WAMR_FR) {
         const bool isRefine1 = m_uiMesh->isReMeshUnzip(
             (const double**)unzipVar, refineVarIds, EM3_NUM_REFINE_VARS,
             waveletTolFunc, em3::EM3_DENDRO_AMR_FAC);
@@ -844,7 +845,7 @@ int EM3Ctx::compute_constraints() {
         std::cout << "... Now computing constraints" << std::endl;
     }
 
-        std::cout << "... Now computing constraints (each proc)" << std::endl;
+        std::cout << "... Now computing constraints (each proc) proc: " << m_uiMesh->getMPIRank() << std::endl;
 
     DVec& m_evar = m_var[VL::CPU_EV];
     DVec& m_evar_unz = m_var[VL::CPU_EV_UZ_IN];
@@ -963,6 +964,8 @@ int EM3Ctx::compute_primitives() {
     const unsigned int nodeLocalBegin = m_uiMesh->getNodeLocalBegin();
     const unsigned int nodeLocalEnd = m_uiMesh->getNodeLocalEnd();
 
+    std::cout << "Computing primitives.... time is " << m_uiTinfo._m_uiT << std::endl;
+
     double var[em3::EM3_NUM_VARS];
     for (unsigned int elem = m_uiMesh->getElementLocalBegin();
          elem < m_uiMesh->getElementLocalEnd(); elem++) {
@@ -996,8 +999,8 @@ int EM3Ctx::compute_primitives() {
     }
 
     // pass the information along from zipped vector...
-    m_uiMesh->readFromGhostBegin(m_pvar.get_vec_ptr(), m_pvar.get_dof());
-    m_uiMesh->readFromGhostEnd(m_pvar.get_vec_ptr(), m_pvar.get_dof());
+    // m_uiMesh->readFromGhostBegin(m_pvar.get_vec_ptr(), m_pvar.get_dof());
+    // m_uiMesh->readFromGhostEnd(m_pvar.get_vec_ptr(), m_pvar.get_dof());
 
     // TODO: any sort of extraction?
 
